@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torneo Comunicaciones</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- FontAwesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/d/dd/Escudo_del_Club_Comunicaciones_%28Mercedes%29.png">
+    <style>
+        .tab-btn.active { border-bottom: 4px solid #000; color: #000; font-weight: bold; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+    
+    <!-- Header -->
+    <header class="bg-yellow-400 text-black p-4 text-center shadow-md">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/d/dd/Escudo_del_Club_Comunicaciones_%28Mercedes%29.png" alt="Comu" class="w-16 mx-auto mb-2 drop-shadow-md">
+        <h1 class="text-2xl font-black uppercase tracking-wide">Torneo Comunicaciones</h1>
+    </header>
+
+    <!-- Navegación -->
+    <nav class="bg-yellow-400 flex justify-center space-x-2 px-2 shadow-sm">
+        <button onclick="cambiarTab('fixture')" id="tab-fixture" class="tab-btn active px-4 py-3 text-sm uppercase">Fixture y Resultados</button>
+        <button onclick="cambiarTab('sponsors')" id="tab-sponsors" class="tab-btn px-4 py-3 text-sm uppercase text-gray-700">Auspiciantes</button>
+        <button onclick="intentarLogin()" id="tab-admin" class="tab-btn px-4 py-3 text-sm uppercase text-gray-700"><i class="fas fa-cog"></i> Admin</button>
+    </nav>
+
+    <!-- VISTA PUBLICA: FIXTURE -->
+    <main id="view-fixture" class="max-w-3xl mx-auto p-4 mt-2 block">
+        <div id="lista-partidos-publico" class="space-y-4">
+            <p class="text-center text-gray-500 py-10"><i class="fas fa-spinner fa-spin text-2xl"></i><br>Cargando fixture...</p>
+        </div>
+    </main>
+
+    <!-- VISTA PUBLICA: SPONSORS -->
+    <main id="view-sponsors" class="max-w-3xl mx-auto p-4 mt-2 hidden">
+        <div id="lista-sponsors-publico" class="grid grid-cols-2 gap-4 text-center"></div>
+    </main>
+
+    <!-- VISTA ADMINISTRADOR -->
+    <main id="view-admin" class="max-w-4xl mx-auto p-4 mt-2 hidden">
+        <div class="bg-gray-900 text-white p-6 rounded-xl shadow-xl">
+            <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+                <h2 class="text-2xl font-bold text-yellow-400"><i class="fas fa-shield-alt"></i> Panel de Control</h2>
+                <button onclick="cerrarAdmin()" class="text-red-400 hover:text-red-300"><i class="fas fa-sign-out-alt"></i> Salir</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Admin Equipos -->
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-3 border-b border-gray-600 pb-2">1. Equipos</h3>
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="nuevo-equipo" placeholder="Nombre del equipo" class="w-full text-black p-2 rounded">
+                        <button onclick="agregarEquipo()" class="bg-yellow-500 text-black px-4 py-2 rounded font-bold hover:bg-yellow-400"><i class="fas fa-plus"></i></button>
+                    </div>
+                    <ul id="lista-equipos-admin" class="space-y-2 max-h-40 overflow-y-auto text-sm"></ul>
+                </div>
+
+                <!-- Admin Partidos (Fixture) -->
+                <div class="bg-gray-800 p-4 rounded-lg md:col-span-2">
+                    <h3 class="font-bold text-lg mb-3 border-b border-gray-600 pb-2">2. Programar Partido</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                        <input type="date" id="fecha-partido" class="text-black p-2 rounded">
+                        <input type="time" id="hora-partido" class="text-black p-2 rounded">
+                        <select id="equipo-local" class="text-black p-2 rounded"><option value="">Local...</option></select>
+                        <select id="equipo-visitante" class="text-black p-2 rounded"><option value="">Visitante...</option></select>
+                    </div>
+                    <button onclick="agregarPartido()" class="bg-yellow-500 text-black px-4 py-2 rounded font-bold w-full hover:bg-yellow-400">Programar Partido</button>
+                </div>
+
+                <!-- Admin Cargar Resultados -->
+                <div class="bg-gray-800 p-4 rounded-lg md:col-span-2">
+                    <h3 class="font-bold text-lg mb-3 border-b border-gray-600 pb-2">3. Gestionar Fixture y Resultados</h3>
+                    <div id="lista-partidos-admin" class="space-y-3 max-h-96 overflow-y-auto"></div>
+                </div>
+
+                <!-- Admin Sponsors -->
+                <div class="bg-gray-800 p-4 rounded-lg md:col-span-2">
+                    <h3 class="font-bold text-lg mb-3 border-b border-gray-600 pb-2">4. Auspiciantes</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                        <input type="text" id="sponsor-nombre" placeholder="Nombre del Sponsor" class="text-black p-2 rounded">
+                        <input type="text" id="sponsor-img" placeholder="URL de la Imagen/Logo" class="text-black p-2 rounded">
+                        <input type="text" id="sponsor-url" placeholder="URL de su web (opcional)" class="text-black p-2 rounded">
+                    </div>
+                    <button onclick="agregarSponsor()" class="bg-yellow-500 text-black px-4 py-2 rounded font-bold w-full hover:bg-yellow-400 mb-4">Agregar Sponsor</button>
+                    <ul id="lista-sponsors-admin" class="grid grid-cols-2 gap-2 text-sm"></ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# Sistema Completo - Torneo Comunicaciones
+
+Esta vez tienes el sistema 100% completo, con Fixture, Horarios, Gestión de Equipos y Sponsors, y conexión a Base de Datos.
+
+## PASO 1: Subir los archivos
+Sube a tu repositorio de GitHub los 4 archivos de este ZIP reemplazando los anteriores: `index.html`, `app.js`, `sw.js` y `manifest.json`.
+
+## PASO 2: CONECTAR LA BASE DE DATOS (OBLIGATORIO)
+Si no haces este paso, los cambios que hagas en el panel de administrador no se van a guardar ni se van a reflejar en otros celulares.
+
+1. Entra a https://console.firebase.google.com/
+2. Crea un proyecto (o entra al que creaste antes).
+3. Ve a "Realtime Database" (asegúrate de que esté en Modo de Prueba).
+4. Ve a la tuerca de Configuración (arriba a la izquierda) > Configuración del Proyecto.
+5. Baja hasta donde dice "Tus apps" y toca el ícono `</>` para registrar una App Web.
+6. Copia el bloque de código que dice `firebaseConfig = { ... }`.
+7. Abre el archivo `app.js` en tu GitHub, dale al lápiz (editar), y pega ese bloque en las primeras líneas del código (reemplazando donde dice "PEGAR_AQUI").
+8. Guarda los cambios (Commit changes).
+
+## CÓMO USAR LA APP
+1. Entra a la web desde tu celular.
+2. Toca la pestaña "Admin" e ingresa el PIN: 2024
+3. **Paso A:** Carga los Equipos.
+4. **Paso B:** Ve a "Programar Partido", elige fecha, hora y los equipos. Se agregará al Fixture como "PENDIENTE".
+5. **Paso C:** Cuando termine el partido, en la misma pantalla de Admin, le cargas los goles y tocas "Finalizar". Instantáneamente aparecerá el resultado en la pestaña pública.

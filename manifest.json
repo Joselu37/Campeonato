@@ -1,0 +1,16 @@
+{
+  "name": "Torneo Comu",
+  "short_name": "Comu App",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#facc15",
+  "theme_color": "#facc15",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Escudo_del_Club_Comunicaciones_%28Mercedes%29.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
