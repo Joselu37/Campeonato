@@ -3,7 +3,24 @@
 // ==========================================
 // Reemplaza esto con los datos de tu proyecto de Firebase
 const firebaseConfig = {
-    apiKey: "PEGAR_AQUI_API_KEY",
+    apiKey: "// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCt22KpsfZXQkHaxYyFEyLWxYPZ2FkRg74",
+  authDomain: "torneo-comunicaciones.firebaseapp.com",
+  databaseURL: "https://torneo-comunicaciones-default-rtdb.firebaseio.com",
+  projectId: "torneo-comunicaciones",
+  storageBucket: "torneo-comunicaciones.firebasestorage.app",
+  messagingSenderId: "200377825369",
+  appId: "1:200377825369:web:52343353d747100cc19948"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);",
     authDomain: "PEGAR_AQUI_PROJECT_ID.firebaseapp.com",
     databaseURL: "https://PEGAR_AQUI_PROJECT_ID-default-rtdb.firebaseio.com",
     projectId: "PEGAR_AQUI_PROJECT_ID",
